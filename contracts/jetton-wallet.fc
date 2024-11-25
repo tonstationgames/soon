@@ -12,8 +12,7 @@
 {-
   Storage
 
-  storage#_ status:uint4
-            balance:Coins owner_address:MsgAddressInt
+  storage#_ balance:Coins owner_address:MsgAddressInt
             jetton_master_address:MsgAddressInt = Storage;
 -}
 
@@ -41,8 +40,6 @@
     slice to_owner_address = in_msg_body~load_msg_addr();
     check_same_workchain(to_owner_address);
     (int balance, slice owner_address, slice jetton_master_address) = load_data();
-    ;; int outgoing_transfers_unlocked = ((status & 1) == 0);
-    ;;throw_unless(error::contract_locked, outgoing_transfers_unlocked);
     throw_unless(error::not_owner, equal_slices_bits(owner_address, sender_address));
 
     balance -= jetton_amount;
@@ -84,8 +81,6 @@
 
 () receive_jettons(slice in_msg_body, slice sender_address, int my_ton_balance, int msg_value) impure inline_ref {
     (int balance, slice owner_address, slice jetton_master_address) = load_data();
-    ;; int incoming_transfers_locked = ((status & 2) == 2);
-    ;; throw_if(error::contract_locked, incoming_transfers_locked);
     ;; see internal TL-B layout in jetton.tlb
     int query_id = in_msg_body~load_query_id();
     int jetton_amount = in_msg_body~load_coins();

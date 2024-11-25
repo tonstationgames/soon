@@ -834,7 +834,7 @@ builder store_query_id(builder b, int query_id) inline {
 
 ;; For `send_raw_message` and `send_message`:
 
-;;; x = 0 is used for ordinary messages; the gas fees are deducted from the senging amount; action phaes should NOT be ignored.
+;;; x = 0 is used for ordinary messages; the gas fees are deducted from the senging amount; action phase should NOT be ignored.
 const int SEND_MODE_REGULAR = 0;
 ;;; +1 means that the sender wants to pay transfer fees separately.
 const int SEND_MODE_PAY_FEES_SEPARATELY = 1;
