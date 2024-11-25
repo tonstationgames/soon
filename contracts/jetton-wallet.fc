@@ -28,8 +28,7 @@
 }
 
 () save_data(int balance, slice owner_address, slice jetton_master_address) impure inline {
-    builder data_builder = pack_jetton_wallet_data_builder(balance, owner_address, jetton_master_address);
-    set_data(data_builder.end_cell());
+    set_data(pack_jetton_wallet_data(balance, owner_address, jetton_master_address));
 }
 
 
