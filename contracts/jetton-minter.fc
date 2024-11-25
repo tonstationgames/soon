@@ -188,7 +188,7 @@
 
 (int, int, slice, cell, cell) get_jetton_data() method_id {
     (int total_supply, slice admin_address, slice next_admin_address, cell jetton_wallet_code, cell metadata) = load_data();
-    return (total_supply, equal_slices_bits(admin_address,address_none()) ? 0 : -1, admin_address, metadata, jetton_wallet_code);
+    return (total_supply, equal_slices_bits(admin_address,address_none()) ? FALSE : TRUE, admin_address, metadata, jetton_wallet_code);
 }
 
 slice get_wallet_address(slice owner_address) method_id {
