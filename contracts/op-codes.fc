@@ -22,7 +22,6 @@ const error::wrong_workchain = 333;
 const op::mint = 0x642b7d07;
 const op::change_admin = 0x6501f354;
 const op::claim_admin = 0xfb88e119;
-const op::drop_admin = 0x7431f221;
 
 ;; jetton-wallet
 
