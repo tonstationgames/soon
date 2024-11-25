@@ -16,7 +16,7 @@
         ds~load_msg_addr(), ;; admin_address
         ds~load_msg_addr(), ;; next_admin_address
         ds~load_ref(),  ;; jetton_wallet_code
-        ds~load_ref()  ;; metadata url (contains snake slice without 0x0 prefix)
+        ds~load_ref()  ;; onchain metadata
     );
     ds.end_parse();
     return data;
