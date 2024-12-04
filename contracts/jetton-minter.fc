@@ -16,7 +16,7 @@
         ds~load_msg_addr(), ;; admin_address
         ds~load_msg_addr(), ;; next_admin_address
         ds~load_ref(),  ;; jetton_wallet_code
-        ds~load_ref()  ;; metadata url (contains snake slice without 0x0 prefix)
+        ds~load_ref()  ;; onchain metadata
     );
     ds.end_parse();
     return data;
@@ -40,7 +40,7 @@
     cell state_init = calculate_jetton_wallet_state_init(to_address, my_address(), jetton_wallet_code);
     slice to_wallet_address = calculate_jetton_wallet_address(state_init);
 
-    ;; build MessageRelaxed, see TL-B layout in stdlib.fc#L733
+    ;; build MessageRelaxed, see TL-B layout in stdlib.fc#L746
     var msg = begin_cell()
     .store_msg_flags_and_address_none(BOUNCEABLE)
     .store_slice(to_wallet_address) ;; dest
@@ -119,7 +119,7 @@
         in_msg_body.end_parse();
 
         if (~ is_address_none(response_address)) {
-            ;; build MessageRelaxed, see TL-B layout in stdlib.fc#L733
+            ;; build MessageRelaxed, see TL-B layout in stdlib.fc#L746
             var msg = begin_cell()
             .store_msg_flags_and_address_none(NON_BOUNCEABLE)
             .store_slice(response_address) ;; dest
@@ -142,7 +142,7 @@
         ? begin_cell().store_slice(owner_address).end_cell()
         : null();
 
-        ;; build MessageRelaxed, see TL-B layout in stdlib.fc#L733
+        ;; build MessageRelaxed, see TL-B layout in stdlib.fc#L746
         var msg = begin_cell()
         .store_msg_flags_and_address_none(NON_BOUNCEABLE)
         .store_slice(sender_address)
@@ -188,7 +188,7 @@
 
 (int, int, slice, cell, cell) get_jetton_data() method_id {
     (int total_supply, slice admin_address, slice next_admin_address, cell jetton_wallet_code, cell metadata) = load_data();
-    return (total_supply, equal_slices_bits(admin_address,address_none()) ? 0 : -1, admin_address, metadata, jetton_wallet_code);
+    return (total_supply, equal_slices_bits(admin_address,address_none()) ? FALSE : TRUE, admin_address, metadata, jetton_wallet_code);
 }
 
 slice get_wallet_address(slice owner_address) method_id {

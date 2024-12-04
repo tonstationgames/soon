@@ -12,8 +12,7 @@
 {-
   Storage
 
-  storage#_ status:uint4
-            balance:Coins owner_address:MsgAddressInt
+  storage#_ balance:Coins owner_address:MsgAddressInt
             jetton_master_address:MsgAddressInt = Storage;
 -}
 
@@ -29,8 +28,7 @@
 }
 
 () save_data(int balance, slice owner_address, slice jetton_master_address) impure inline {
-    builder data_builder = pack_jetton_wallet_data_builder(balance, owner_address, jetton_master_address);
-    set_data(data_builder.end_cell());
+    set_data(pack_jetton_wallet_data(balance, owner_address, jetton_master_address));
 }
 
 
@@ -41,8 +39,6 @@
     slice to_owner_address = in_msg_body~load_msg_addr();
     check_same_workchain(to_owner_address);
     (int balance, slice owner_address, slice jetton_master_address) = load_data();
-    ;; int outgoing_transfers_unlocked = ((status & 1) == 0);
-    ;;throw_unless(error::contract_locked, outgoing_transfers_unlocked);
     throw_unless(error::not_owner, equal_slices_bits(owner_address, sender_address));
 
     balance -= jetton_amount;
@@ -67,7 +63,7 @@
     .store_slice(either_forward_payload)
     .end_cell();
 
-    ;; build MessageRelaxed, see TL-B layout in stdlib.fc#L733
+    ;; build MessageRelaxed, see TL-B layout in stdlib.fc#L746
     cell msg = begin_cell()
     .store_msg_flags_and_address_none(BOUNCEABLE)
     .store_slice(to_wallet_address)
@@ -84,8 +80,6 @@
 
 () receive_jettons(slice in_msg_body, slice sender_address, int my_ton_balance, int msg_value) impure inline_ref {
     (int balance, slice owner_address, slice jetton_master_address) = load_data();
-    ;; int incoming_transfers_locked = ((status & 2) == 2);
-    ;; throw_if(error::contract_locked, incoming_transfers_locked);
     ;; see internal TL-B layout in jetton.tlb
     int query_id = in_msg_body~load_query_id();
     int jetton_amount = in_msg_body~load_coins();
@@ -112,7 +106,7 @@
         .store_slice(either_forward_payload)
         .end_cell();
 
-        ;; build MessageRelaxed, see TL-B layout in stdlib.fc#L733
+        ;; build MessageRelaxed, see TL-B layout in stdlib.fc#L746
         cell msg = begin_cell()
         .store_msg_flags_and_address_none(NON_BOUNCEABLE)
         .store_slice(owner_address)
@@ -127,7 +121,7 @@
         int to_leave_on_balance = my_ton_balance - msg_value + my_storage_due();
         raw_reserve(max(to_leave_on_balance, calculate_jetton_wallet_min_storage_fee()), RESERVE_AT_MOST);
 
-        ;; build MessageRelaxed, see TL-B layout in stdlib.fc#L733
+        ;; build MessageRelaxed, see TL-B layout in stdlib.fc#L746
         cell msg = begin_cell()
         .store_msg_flags_and_address_none(NON_BOUNCEABLE)
         .store_slice(response_address)
@@ -163,7 +157,7 @@
     .store_slice(response_address)
     .end_cell();
 
-    ;; build MessageRelaxed, see TL-B layout in stdlib.fc#L733
+    ;; build MessageRelaxed, see TL-B layout in stdlib.fc#L746
     cell msg = begin_cell()
     .store_msg_flags_and_address_none(BOUNCEABLE)
     .store_slice(jetton_master_address)
