@@ -15,6 +15,7 @@ When deploying a jetton-master contract, a vanity contract will be used to obtai
 
 Contracts has been audited by security companies:
 * CertiK: [Audit report](https://skynet.certik.com/projects/ton-station)
+
 Feel free to review this report for a detailed understanding of the contracts security measures.
 
 ## How to use and install localy
